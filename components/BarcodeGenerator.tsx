@@ -1,5 +1,6 @@
 "use client"
 
+import type React from "react"
 import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,36 +11,10 @@ import { AlertCircle, CheckCircle, XCircle } from "lucide-react"
 import Barcode from "react-barcode"
 import { PDFDownloadLink } from "@react-pdf/renderer"
 import PDFDocument from "./PDFDocument"
-// import LabelImageExport from './IMGDocument'
 import type { Specification } from "./ui/types"
 
-// Using environment variables
 const API_URL = `${process.env.NEXT_PUBLIC_BACKEND_API}api`
 const SPECIFICATION_URL = `${process.env.NEXT_PUBLIC_BACKEND_API}specification`
-
-// type Specification = {
-//   pvInput: {
-//     maxPvInputPower: string
-//     maxPvInputVoltageVoc: string
-//     maxPvInputCurrent: string
-//     mpptTrackingVoltageRange: string
-//     ratedVoltage: string
-//   }
-//   batteryAndCharging: {
-//     maxAcChargingCurrent: string
-//     maxPvChargingCurrent: string
-//     maxChargingCurrent: string
-//     ratedBatteryVoltage: string
-//   }
-//   gridConnectedOperation: {
-//     ratedOutputPower: string
-//     ratedOutputVoltage: string
-//     ratedOutputCurrent: string
-//   }
-//   generalParameters: {
-//     protectionDegree: string
-//   }
-// }
 
 export default function BarcodeGenerator() {
   const [barcodeData, setBarcodeData] = useState({
@@ -52,40 +27,32 @@ export default function BarcodeGenerator() {
   })
   const [barcodeString, setBarcodeString] = useState("")
   const [selectedDate, setSelectedDate] = useState("")
-  const [generationTime, setGenerationTime] = useState("")
   const [specification, setSpecification] = useState<Specification | null>(null)
   const [usedSerials, setUsedSerials] = useState<Record<string, Set<string>>>({})
   const [status, setStatus] = useState<"idle" | "success" | "error" | "warning">("idle")
   const [errorMessage, setErrorMessage] = useState("")
 
-
   const fetchSpecification = useCallback(async (model: string) => {
     try {
-      const response = await fetch(`${SPECIFICATION_URL}/get-specification/${model}`);
+      const response = await fetch(`${SPECIFICATION_URL}/get-specification/${model}`)
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          `HTTP error! status: ${response.status}, message: ${errorData.message || "Unknown error"}`
-        );
+        const errorData = await response.json()
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || "Unknown error"}`)
       }
-      const data = await response.json();
+      const data = await response.json()
       if (!data || !data.data) {
-        throw new Error("Invalid data structure received from the server");
+        throw new Error("Invalid data structure received from the server")
       }
-      // Directly compare the model
       if (data.data.model !== model) {
-        throw new Error(`No specification found for model ${model}`);
+        throw new Error(`No specification found for model ${model}`)
       }
-      setSpecification(data.data); // Set the specification object directly
+      setSpecification(data.data)
     } catch (error) {
-      console.error("Error fetching specification:", error);
-      setStatus("error");
-      setErrorMessage(
-        `Failed to fetch specification: ${error instanceof Error ? error.message : "Unknown error"}`
-      );
+      console.error("Error fetching specification:", error)
+      setStatus("error")
+      setErrorMessage(`Failed to fetch specification: ${error instanceof Error ? error.message : "Unknown error"}`)
     }
-  }, []);
-  
+  }, [])
 
   const fetchUsedSerials = useCallback(async (model: string) => {
     try {
@@ -114,23 +81,18 @@ export default function BarcodeGenerator() {
 
   const getNextUnitNumber = useCallback(() => {
     const allUsedNumbers = new Set<number>()
-
-    // Collect all used numbers across all models
     Object.values(usedSerials).forEach((modelSerials) => {
       modelSerials.forEach((serial) => {
         allUsedNumbers.add(Number.parseInt(serial))
       })
     })
-
     if (allUsedNumbers.size === 0) {
       return "001"
     }
-
     let counter = 1
     while (allUsedNumbers.has(counter)) {
       counter++
     }
-
     return counter.toString().padStart(3, "0")
   }, [usedSerials])
 
@@ -138,7 +100,6 @@ export default function BarcodeGenerator() {
     setBarcodeData((prev) => ({ ...prev, [name]: value, unitNumber: "" }))
     if (name === "model") {
       setBarcodeString("")
-      setGenerationTime("")
       setStatus("idle")
       setErrorMessage("")
     }
@@ -153,8 +114,6 @@ export default function BarcodeGenerator() {
 
   const handleUnitNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
-
-    // Only allow updating if the number isn't used in the current model
     if (value && usedSerials[barcodeData.model]?.has(value)) {
       setStatus("warning")
       setErrorMessage(
@@ -162,7 +121,6 @@ export default function BarcodeGenerator() {
       )
       return
     }
-
     setStatus("idle")
     setErrorMessage("")
     setBarcodeData((prev) => ({ ...prev, unitNumber: value }))
@@ -187,7 +145,6 @@ export default function BarcodeGenerator() {
       setBarcodeData((prev) => ({ ...prev, unitNumber: currentUnitNumber }))
     }
 
-    // Check if the unit number is already used for THIS model
     if (usedSerials[barcodeData.model]?.has(currentUnitNumber)) {
       setStatus("warning")
       setErrorMessage(
@@ -213,10 +170,8 @@ export default function BarcodeGenerator() {
       const data = await response.json()
       const modifiedBarcodeString = data.barcodeString.replace(/ - Alpha/g, "").replace(/ /g, "")
       setBarcodeString(modifiedBarcodeString)
-      setGenerationTime(new Date(data.generationTime).toLocaleString())
       setStatus("success")
 
-      // Update used serials for this model only
       setUsedSerials((prev) => ({
         ...prev,
         [barcodeData.model]: new Set([...(prev[barcodeData.model] || []), currentUnitNumber]),
@@ -240,8 +195,6 @@ export default function BarcodeGenerator() {
         return null
     }
   }
-
-  console.log("Generation Time:", generationTime); // For debugging
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -384,16 +337,11 @@ export default function BarcodeGenerator() {
                 </Button>
               )}
             </PDFDownloadLink>
-
-            {/* <LabelImageExport 
-      specification={specification}
-      barcodeData={barcodeData}
-      barcodeString={barcodeString}
-    /> */}
           </div>
         )}
       </CardContent>
     </Card>
   )
 }
+
 
