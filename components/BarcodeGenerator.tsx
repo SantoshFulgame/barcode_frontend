@@ -241,6 +241,8 @@ export default function BarcodeGenerator() {
     }
   }
 
+  console.log("Generation Time:", generationTime); // For debugging
+
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
