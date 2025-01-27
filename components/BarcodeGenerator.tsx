@@ -172,10 +172,13 @@ export default function BarcodeGenerator() {
       setBarcodeString(modifiedBarcodeString)
       setStatus("success")
 
-      setUsedSerials((prev) => ({
-        ...prev,
-        [barcodeData.model]: new Set([...Array.from(prev[barcodeData.model] || []), currentUnitNumber]),
-      }))
+      setUsedSerials((prev) => {
+        const currentSet = prev[barcodeData.model] || new Set<string>()
+        return {
+          ...prev,
+          [barcodeData.model]: new Set([...Array.from(currentSet), currentUnitNumber]),
+        }
+      })
     } catch (error) {
       console.error("Error saving barcode:", error)
       setStatus("error")
@@ -326,9 +329,7 @@ export default function BarcodeGenerator() {
         {barcodeString && specification && (
           <div className="space-y-4">
             <PDFDownloadLink
-              document={
-                <PDFDocument specification={specification} barcodeData={barcodeData} barcodeString={barcodeString} />
-              }
+              document={<PDFDocument specification={specification} barcodeString={barcodeString} />}
               fileName={`${barcodeData.model}_${barcodeData.unitNumber}.pdf`}
             >
               {({ loading }) => (
