@@ -10,13 +10,12 @@ import hotSurface from "../app/images/Hot_Surface.png"
 import WEEE_symbol from "../app/images/WEEE_symbol_vectors (2).png"
 import processing from "../app/images/10min.png"
 
-
 const styles = StyleSheet.create({
   symbolsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "1mm 1mm", // Reduced horizontal padding
+    padding: "1mm 1mm",
     borderTop: 0.5,
     borderColor: "#000000",
     width: "100%",
@@ -27,28 +26,34 @@ const styles = StyleSheet.create({
     objectFit: "contain",
   },
   cautionSymbol: {
-    width: "6.5mm", // Slightly smaller than other symbols
+    width: "6.5mm",
     height: "6mm",
     objectFit: "contain",
-    marginTop: "1mm", // Adjust this value to move the symbol downward
+    marginTop: "1mm",
   },  
   closelySpacedSymbol: {
     width: "5.5mm",
     height: "5.5mm",
-    position: "absolute", // Overlapping effect
-    left: "5.5mm", // Adjust overlap position to move right
-    top: "1mm", // Move upward
+    position: "absolute",
+    left: "5.5mm",
+    top: "1mm",
     objectFit: "contain",
   },
   compactRow: {
-    position: "relative", // Parent must have relative positioning
-    width: "10mm", // Width to fit overlapping items
-    height: "7mm", // Same as the symbol's height
-    marginRight: "1mm", // Add spacing to the right
+    position: "relative",
+    width: "10mm",
+    height: "7mm",
+    marginRight: "1mm",
   },
 });
 
-const SymbolImage = ({ src, style = styles.symbol }: { src: StaticImageData; style?: any }) => (
+interface SymbolImageProps {
+  src: StaticImageData;
+  style?: React.ComponentProps<typeof View>['style'];
+  alt: string;
+}
+
+const SymbolImage = ({ src, style = styles.symbol, alt }: SymbolImageProps) => (
   <View style={style}>
     <Image
       src={src.src || "/placeholder.svg"}
@@ -56,6 +61,7 @@ const SymbolImage = ({ src, style = styles.symbol }: { src: StaticImageData; sty
         width: "100%",
         height: "100%",
       }}
+      alt={alt}
     />
   </View>
 );
@@ -63,13 +69,13 @@ const SymbolImage = ({ src, style = styles.symbol }: { src: StaticImageData; sty
 export const PackagingSymbols = () => (
   <View style={styles.symbolsContainer}>
     <View style={styles.compactRow}>
-        <SymbolImage src={Caution} style={styles.cautionSymbol} />
-      <SymbolImage src={processing} style={styles.closelySpacedSymbol} />
+      <SymbolImage src={Caution} style={styles.cautionSymbol} alt="Caution symbol" />
+      <SymbolImage src={processing} style={styles.closelySpacedSymbol} alt="Processing time 10 minutes" />
     </View>
-    <SymbolImage src={warningImage} />
-    <SymbolImage src={Caution} style={styles.cautionSymbol} />
-    <SymbolImage src={hotSurface} />
-    <SymbolImage src={manualBooksImage} />
-    <SymbolImage src={WEEE_symbol} />
+    <SymbolImage src={warningImage} alt="Warning symbol" />
+    <SymbolImage src={Caution} style={styles.cautionSymbol} alt="Caution symbol" />
+    <SymbolImage src={hotSurface} alt="Hot surface warning" />
+    <SymbolImage src={manualBooksImage} alt="Manual books" />
+    <SymbolImage src={WEEE_symbol} alt="WEEE recycling symbol" />
   </View>
 );
