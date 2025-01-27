@@ -131,9 +131,8 @@ const styles = StyleSheet.create({
 
 const PDFDocument = ({
   specification,
-  barcodeData,
   barcodeString,
-}: { specification: Specification; barcodeData: any; barcodeString: string }) => (
+}: { specification: Specification; barcodeString: string }) => (
   <Document>
     <Page size={[158, 280]} style={styles.page}>
       <View style={styles.container}>
