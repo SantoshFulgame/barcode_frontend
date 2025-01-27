@@ -1,6 +1,7 @@
 import React from "react"
 import { View, Image, StyleSheet } from "@react-pdf/renderer"
 import type { StaticImageData } from "next/image"
+import type { Style } from "@react-pdf/types"
 
 // Import images
 import Caution from "../app/images/Caution.png"
@@ -49,11 +50,11 @@ const styles = StyleSheet.create({
 
 interface SymbolImageProps {
   src: StaticImageData;
-  style?: React.ComponentProps<typeof View>['style'];
+  style?: Style;
   alt: string;
 }
 
-const SymbolImage = ({ src, style = styles.symbol, alt }: SymbolImageProps) => (
+const SymbolImage: React.FC<SymbolImageProps> = ({ src, style = styles.symbol, alt }) => (
   <View style={style}>
     <Image
       src={src.src || "/placeholder.svg"}
@@ -66,7 +67,7 @@ const SymbolImage = ({ src, style = styles.symbol, alt }: SymbolImageProps) => (
   </View>
 );
 
-export const PackagingSymbols = () => (
+export const PackagingSymbols: React.FC = () => (
   <View style={styles.symbolsContainer}>
     <View style={styles.compactRow}>
       <SymbolImage src={Caution} style={styles.cautionSymbol} alt="Caution symbol" />
@@ -79,3 +80,4 @@ export const PackagingSymbols = () => (
     <SymbolImage src={WEEE_symbol} alt="WEEE recycling symbol" />
   </View>
 );
+
