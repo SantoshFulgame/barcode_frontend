@@ -174,7 +174,7 @@ export default function BarcodeGenerator() {
 
       setUsedSerials((prev) => ({
         ...prev,
-        [barcodeData.model]: new Set([...(prev[barcodeData.model] || []), currentUnitNumber]),
+        [barcodeData.model]: new Set([...Array.from(prev[barcodeData.model] || []), currentUnitNumber]),
       }))
     } catch (error) {
       console.error("Error saving barcode:", error)
@@ -343,5 +343,4 @@ export default function BarcodeGenerator() {
     </Card>
   )
 }
-
 
