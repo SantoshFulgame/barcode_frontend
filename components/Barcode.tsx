@@ -1,7 +1,4 @@
-"use client"
-
-import type React from "react"
-import { useMemo } from "react"
+import React from "react"
 import { View, Text, StyleSheet, Image } from "@react-pdf/renderer"
 import JsBarcode from "jsbarcode"
 
@@ -29,23 +26,19 @@ interface PDFBarcodeProps {
 }
 
 export const PDFBarcode: React.FC<PDFBarcodeProps> = ({ value, width = 50, height = 15 }) => {
-  // Generate a data URL for the barcode using useMemo to cache the result
-  const barcodeDataURL = useMemo(() => {
-    try {
-      const canvas = document.createElement("canvas")
-      JsBarcode(canvas, value, {
-        format: "CODE128",
-        width: 1,
-        height: height,
-        displayValue: false,
-        margin: 0,
-        background: "#ffffff",
-      })
-      return canvas.toDataURL("image/png")
-    } catch (error) {
-      console.error("Error generating barcode:", error)
-      return "/placeholder.svg"
-    }
+  // Generate a data URL for the barcode
+  const barcodeDataURL = React.useMemo(() => {
+    if (typeof window === "undefined") return "" // Server-side rendering check
+    const canvas = document.createElement("canvas")
+    JsBarcode(canvas, value, {
+      format: "CODE128",
+      width: 1,
+      height: height,
+      displayValue: false,
+      margin: 0,
+      background: "#ffffff",
+    })
+    return canvas.toDataURL("image/png")
   }, [value, height])
 
   return (
@@ -53,11 +46,11 @@ export const PDFBarcode: React.FC<PDFBarcodeProps> = ({ value, width = 50, heigh
       <Image
         style={[styles.barcode, { width: `${width}mm`, height: `${height}mm` }]}
         src={barcodeDataURL || "/placeholder.svg"}
-        alt={`Barcode for serial number: ${value}`}
       />
       <Text style={styles.text}>S/N : {value}</Text>
     </View>
   )
 }
+
 
 
