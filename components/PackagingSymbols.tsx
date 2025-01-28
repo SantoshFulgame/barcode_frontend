@@ -1,4 +1,4 @@
-import React from "react"
+import type React from "react"
 import { View, Image, StyleSheet } from "@react-pdf/renderer"
 import type { StaticImageData } from "next/image"
 import type { Style } from "@react-pdf/types"
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     height: "6mm",
     objectFit: "contain",
     marginTop: "1mm",
-  },  
+  },
   closelySpacedSymbol: {
     width: "5.5mm",
     height: "5.5mm",
@@ -46,15 +46,15 @@ const styles = StyleSheet.create({
     height: "7mm",
     marginRight: "1mm",
   },
-});
+})
 
 interface SymbolImageProps {
-  src: StaticImageData;
-  style?: Style;
-  alt: string;
+  src: StaticImageData
+  style?: Style
+  alt: string // Kept for documentation, but not used in the Image component
 }
 
-const SymbolImage: React.FC<SymbolImageProps> = ({ src, style = styles.symbol, alt }) => (
+const SymbolImage: React.FC<SymbolImageProps> = ({ src, style = styles.symbol }) => (
   <View style={style}>
     <Image
       src={src.src || "/placeholder.svg"}
@@ -62,10 +62,9 @@ const SymbolImage: React.FC<SymbolImageProps> = ({ src, style = styles.symbol, a
         width: "100%",
         height: "100%",
       }}
-      alt={alt}
     />
   </View>
-);
+)
 
 export const PackagingSymbols: React.FC = () => (
   <View style={styles.symbolsContainer}>
@@ -79,5 +78,5 @@ export const PackagingSymbols: React.FC = () => (
     <SymbolImage src={manualBooksImage} alt="Manual books" />
     <SymbolImage src={WEEE_symbol} alt="WEEE recycling symbol" />
   </View>
-);
+)
 
