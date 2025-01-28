@@ -1,3 +1,16 @@
+import type { PDFDownloadLinkProps as OriginalPDFDownloadLinkProps } from "@react-pdf/renderer"
+
+export interface PDFDownloadLinkRenderProps {
+  blob: Blob | null
+  url: string | null
+  loading: boolean
+  error: Error | null
+}
+
+export type PDFDownloadLinkProps = Omit<OriginalPDFDownloadLinkProps, "children"> & {
+  children: (props: PDFDownloadLinkRenderProps) => React.ReactNode
+}
+
 export type Specification = {
   model: string
   pvInput: {
@@ -92,4 +105,5 @@ export type Specification = {
     grossWeight: string
   }
 }
+
 
