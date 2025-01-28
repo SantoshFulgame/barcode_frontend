@@ -1,3 +1,4 @@
+
 import type React from "react"
 import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer"
 import { PDFBarcode } from "./Barcode"
@@ -129,8 +130,16 @@ const styles = StyleSheet.create({
 })
 
 interface PDFDocumentProps {
-  specification: Specification
-  barcodeString: string
+  specification: Specification;
+  barcodeData: {
+    date: string;
+    model: string;
+    phase: string;
+    mppt: string;
+    location: string;
+    unitNumber: string;
+  };
+  barcodeString: string;
 }
 
 const PDFDocument: React.FC<PDFDocumentProps> = ({ specification, barcodeString }) => (
@@ -243,7 +252,7 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ specification, barcodeString 
           </View>
         </View> */}
 
-        <View style={styles.footer}>
+<View style={styles.footer}>
           <View style={styles.barcode}>
             <PDFBarcode value={barcodeString} width={40} height={5} />
           </View>
