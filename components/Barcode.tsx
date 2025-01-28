@@ -52,7 +52,6 @@ export const PDFBarcode: React.FC<PDFBarcodeProps> = ({
       <Image
         style={[styles.barcode, { width: `${width}mm`, height: `${height}mm` }]}
         src={barcodeDataURL || "/placeholder.svg"}
-        alt={`Barcode for serial number: ${value}`}
       />
       <Text style={styles.text}>S/N : {value}</Text>
     </View>
