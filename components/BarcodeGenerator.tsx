@@ -173,10 +173,11 @@ export default function BarcodeGenerator() {
       setStatus("success")
 
       setUsedSerials((prev) => {
-        const currentSet = prev[barcodeData.model] || new Set<string>()
+        const updatedSet = new Set(prev[barcodeData.model] || [])
+        updatedSet.add(currentUnitNumber)
         return {
           ...prev,
-          [barcodeData.model]: new Set([...Array.from(currentSet), currentUnitNumber]),
+          [barcodeData.model]: updatedSet,
         }
       })
     } catch (error) {
@@ -329,14 +330,12 @@ export default function BarcodeGenerator() {
         {barcodeString && specification && (
           <div className="space-y-4">
             <PDFDownloadLink
-              document={<PDFDocument specification={specification} barcodeString={barcodeString} />}
+              document={
+                <PDFDocument specification={specification} barcodeData={barcodeData} barcodeString={barcodeString} />
+              }
               fileName={`${barcodeData.model}_${barcodeData.unitNumber}.pdf`}
             >
-              {({ loading }) => (
-                <Button className="w-full" disabled={loading}>
-                  {loading ? "Generating PDF..." : "Export Label as PDF"}
-                </Button>
-              )}
+              <Button className="w-full">Export Label as PDF</Button>
             </PDFDownloadLink>
           </div>
         )}
@@ -344,4 +343,6 @@ export default function BarcodeGenerator() {
     </Card>
   )
 }
+
+
 
