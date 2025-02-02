@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import { View, Text, StyleSheet, Image } from "@react-pdf/renderer";
 import JsBarcode from "jsbarcode";
@@ -25,7 +27,7 @@ interface PDFBarcodeProps {
   height?: number;
 }
 
-export const PDFBarcode: React.FC<PDFBarcodeProps> = ({ 
+const PDFBarcode: React.FC<PDFBarcodeProps> = ({ 
   value, 
   width = 50, 
   height = 15 
@@ -57,3 +59,5 @@ export const PDFBarcode: React.FC<PDFBarcodeProps> = ({
     </View>
   );
 };
+
+export default PDFBarcode;
