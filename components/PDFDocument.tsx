@@ -2,7 +2,7 @@
 import type React from "react"
 import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer"
 import PDFBarcode from "./Barcode"
-import { PackagingSymbols } from "./PackagingSymbols"
+import  PackagingSymbols from "./PackagingSymbols"
 import type { Specification } from "./ui/types"
 
 // Register font
