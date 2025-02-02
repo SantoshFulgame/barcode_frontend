@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import { View, Image, StyleSheet } from "@react-pdf/renderer"
 import type { StaticImageData } from "next/image"
@@ -66,7 +68,7 @@ const SymbolImage: React.FC<SymbolImageProps> = ({ src, style = styles.symbol })
   </View>
 )
 
-export const PackagingSymbols: React.FC = () => (
+const PackagingSymbols: React.FC = () => (
   <View style={styles.symbolsContainer}>
     <View style={styles.compactRow}>
       <SymbolImage src={Caution} style={styles.cautionSymbol} alt="Caution symbol" />
@@ -80,3 +82,5 @@ export const PackagingSymbols: React.FC = () => (
   </View>
 )
 
+
+export default PackagingSymbols;
